@@ -1,0 +1,7 @@
+print("set before")
+n=eval(input())
+print()
+print("values to insert as set")
+add1=eval(input())
+z=n.union(add1)
+print(z)

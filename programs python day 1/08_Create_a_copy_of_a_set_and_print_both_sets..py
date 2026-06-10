@@ -1,0 +1,5 @@
+n=eval(input())
+set_new=set(n)
+print(n)
+print()
+print(set_new)

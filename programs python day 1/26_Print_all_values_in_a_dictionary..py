@@ -1,0 +1,1 @@
+print(list(new_dict.values()))

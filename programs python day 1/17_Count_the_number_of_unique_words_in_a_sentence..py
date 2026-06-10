@@ -1,0 +1,5 @@
+n=input()
+z=n.split()
+new=set(z)
+print("no of unique words are :-")
+print(len(new))

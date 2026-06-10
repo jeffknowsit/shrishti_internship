@@ -1,0 +1,6 @@
+n=eval(input())
+print("before pop")
+print(n)
+n.pop()
+print("After pop")
+print(n)
