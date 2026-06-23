@@ -17,9 +17,14 @@ import matplotlib.pyplot as plt
 from pandas.plotting import scatter_matrix
 # Reduce text size for readability
 pd.options.display.max_columns = None
-0
-0
+
 # Scatter matrix (pairwise scatter plots)
 axes = scatter_matrix(X, figsize=(10, 10), diagonal='hist')
 # Improve layout
 st.write('Iris Feature Pairwise Scatter Matrix')
+
+import matplotlib.pyplot as plt
+from pandas.plotting import scatter_matrix
+graph=scatter_matrix(X,figsize=(10,10),diagonal="hist")
+plt.title("The scatter graph is")
+st.pyplot(graph)
