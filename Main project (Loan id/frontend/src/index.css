@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES — Design Tokens
+   ============================================================ */
+:root {
+  --background:        #0A0A0F;
+  --background-alt:    #12121A;
+  --foreground:        #FAFAFA;
+  --muted:             #1A1A24;
+  --muted-foreground:  #71717A;
+  --accent:            #F59E0B;
+  --accent-foreground: #0A0A0F;
+  --accent-muted:      rgba(245, 158, 11, 0.15);
+  --border:            rgba(255, 255, 255, 0.08);
+  --border-hover:      rgba(255, 255, 255, 0.15);
+  --card:              rgba(26, 26, 36, 0.6);
+  --card-solid:        #1A1A24;
+  --ring:              #F59E0B;
+
+  --success:           #34D399;
+  --success-muted:     rgba(52, 211, 153, 0.15);
+  --danger:            #F87171;
+  --danger-muted:      rgba(248, 113, 113, 0.15);
+
+  --glow-sm:           0 0 20px rgba(245, 158, 11, 0.15);
+  --glow-md:           0 0 40px rgba(245, 158, 11, 0.2);
+  --glow-lg:           0 0 60px rgba(245, 158, 11, 0.25);
+  --border-glow:       0 0 0 1px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+/* ============================================================
+   BASE RESET
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ============================================================
+   REDUCED MOTION — disable transforms, keep opacity fades
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   SCROLLBAR STYLING
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 99px;
+  opacity: 0.4;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ============================================================
+   FOCUS VISIBLE — global amber ring
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   AMBIENT BACKGROUND ORB (single, fixed, decorative)
+   ============================================================ */
+.ambient-orb {
+  position: fixed;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   UTILITY CLASSES (non-Tailwind, for design system consistency)
+   ============================================================ */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.card-interactive {
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: transform 300ms ease-out, border-color 300ms ease-out, background 300ms ease-out, box-shadow 300ms ease-out;
+}
+.card-interactive:hover {
+  transform: scale(1.02);
+  border-color: var(--border-hover);
+  background: rgba(26, 26, 36, 0.85);
+}
+
+.font-display {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+.font-mono-label {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.05em;
+}
+
+/* Segmented control sliding background */
+.seg-control-wrapper {
+  position: relative;
+  display: inline-flex;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.seg-control-option {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: color 200ms ease-out;
+  user-select: none;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+}
+.seg-control-option:hover:not(.seg-active) {
+  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.05);
+}
+.seg-control-option.seg-active {
+  color: var(--accent-foreground);
+}
+
+.seg-slider {
+  position: absolute;
+  top: 3px;
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: var(--glow-sm);
+  transition: left 200ms ease-out, width 200ms ease-out;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Input base */
+.input-base {
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--foreground);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 15px;
+  height: 48px;
+  padding: 0 14px;
+  width: 100%;
+  transition: border-color 200ms ease-out, box-shadow 200ms ease-out;
+  outline: none;
+}
+.input-base::placeholder {
+  color: var(--muted-foreground);
+}
+.input-base:focus {
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15), var(--glow-sm);
+}
+.input-base:hover:not(:focus) {
+  border-color: var(--border-hover);
+}
+.input-base.input-error {
+  border-color: rgba(248, 113, 113, 0.5);
+}
+
+/* Step transitions */
+.step-enter-right {
+  animation: fadeSlideIn 250ms ease-out;
+}
+.step-enter-left {
+  animation: fadeSlideInLeft 250ms ease-out;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeSlideInLeft {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.15); }
+  50%       { box-shadow: 0 0 35px rgba(245, 158, 11, 0.35); }
+}
