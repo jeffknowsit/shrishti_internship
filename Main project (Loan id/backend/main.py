@@ -20,14 +20,16 @@ Run with:
 
 from __future__ import annotations
 
+import logging
 import pickle
+import time
 from pathlib import Path
 from typing import Literal
 
 import joblib
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -106,6 +108,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Logger setup
+logger = logging.getLogger("uvicorn.error")
+
+# Middleware for logging requests/connections
+@app.middleware("http")
+async def log_connections(request: Request, call_next):
+    client_host = request.client.host if request.client else "unknown"
+    client_port = request.client.port if request.client else "unknown"
+    log_msg = f"--> Incoming connection from {client_host}:{client_port} - {request.method} {request.url.path}"
+    print(log_msg, flush=True)
+    logger.info(log_msg)
+    start_time = time.time()
+    try:
+        response = await call_next(request)
+        duration = time.time() - start_time
+        completion_msg = f"<-- Completed connection: {request.method} {request.url.path} - Status: {response.status_code} - Time: {duration:.4f}s"
+        print(completion_msg, flush=True)
+        logger.info(completion_msg)
+        return response
+    except Exception as exc:
+        duration = time.time() - start_time
+        err_msg = f"X-- Connection failed: {request.method} {request.url.path} - Error: {exc} - Time: {duration:.4f}s"
+        print(err_msg, flush=True)
+        logger.error(err_msg)
+        raise exc
 
 # ---------------------------------------------------------------------------
 # 3. PYDANTIC MODELS
